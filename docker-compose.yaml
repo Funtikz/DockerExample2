@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  db_pg_15:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: exampledb
+      POSTGRES_USER: nikita
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5400:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  backend:
+    build: ./backend/DockerDBExample
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db_pg_15
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db_pg_15:5432/exampledb
+      SPRING_DATASOURCE_USERNAME: nikita
+      SPRING_DATASOURCE_PASSWORD: 12345
+
+volumes:
+  postgres_data:
